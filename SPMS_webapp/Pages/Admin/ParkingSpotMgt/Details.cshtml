@@ -1,0 +1,37 @@
+﻿@page
+@model SPMS_webapp.Pages.Admin.ParkingSpotMgt.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>ParkingSpot</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ParkingSpot.SpotNumber)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ParkingSpot.SpotNumber)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ParkingSpot.IsOccupied)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ParkingSpot.IsOccupied)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ParkingSpot.IOTEnabledParkingMeter)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ParkingSpot.IOTEnabledParkingMeter.Id)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.ParkingSpot.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

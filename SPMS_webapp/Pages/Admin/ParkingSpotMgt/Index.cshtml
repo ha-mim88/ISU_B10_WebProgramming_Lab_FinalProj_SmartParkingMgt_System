@@ -1,0 +1,48 @@
+﻿@page
+@model SPMS_webapp.Pages.Admin.ParkingSpotMgt.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ParkingSpot[0].SpotNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ParkingSpot[0].IsOccupied)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ParkingSpot[0].IOTEnabledParkingMeter)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.ParkingSpot) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SpotNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsOccupied)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IOTEnabledParkingMeter.Code)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

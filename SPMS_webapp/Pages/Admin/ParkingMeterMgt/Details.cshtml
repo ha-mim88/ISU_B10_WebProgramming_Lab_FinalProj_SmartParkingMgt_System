@@ -1,0 +1,31 @@
+﻿@page
+@model SPMS_webapp.Pages.Admin.ParkingMeterMgt.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>IOTEnabledParkingMeter</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IOTEnabledParkingMeter.Code)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IOTEnabledParkingMeter.Code)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IOTEnabledParkingMeter.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IOTEnabledParkingMeter.Status)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.IOTEnabledParkingMeter.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>
