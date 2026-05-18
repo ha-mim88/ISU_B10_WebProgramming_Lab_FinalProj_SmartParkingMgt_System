@@ -54,10 +54,11 @@ namespace SPMS_webapp.Pages.Admin.ParkingMeterMgt
                 return Page();
             }
 
-            _context.Attach(IOTEnabledParkingMeter).State = EntityState.Modified;
+            //_context.Attach(IOTEnabledParkingMeter).State = EntityState.Modified;
 
             try
             {
+                _context.IOTEnabledParkingMeter.Update(IOTEnabledParkingMeter);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)

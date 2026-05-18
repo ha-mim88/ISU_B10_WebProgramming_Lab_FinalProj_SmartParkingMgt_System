@@ -1,36 +1,36 @@
 ﻿@page
 @model SPMS_webapp.Pages.Admin.ParkingMeterMgt.CreateModel
 
-        @{
-        ViewData["Title"] = "Create";
-        }
+@{
+    ViewData["Title"] = "Create";
+}
         
-        <h1>Create</h1>
+<h1>Create</h1>
         
     <h4>IOTEnabledParkingMeter</h4>
     <hr />
     <div class="row">
     <div class="col-md-4">
     <form method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IOTEnabledParkingMeter.Code" class="control-label"></label>
-                <input asp-for="IOTEnabledParkingMeter.Code" class="form-control" />
-                <span asp-validation-for="IOTEnabledParkingMeter.Code" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IOTEnabledParkingMeter.Status" class="control-label"></label>
-                <select asp-for="IOTEnabledParkingMeter.Status" class="form-control">                    
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                    <option value="Maintenance">Maintenance</option>
-                </select>
-                <span asp-validation-for="IOTEnabledParkingMeter.Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="IOTEnabledParkingMeter.Code" class="control-label"></label>
+            <input asp-for="IOTEnabledParkingMeter.Code" class="form-control" />
+            <span asp-validation-for="IOTEnabledParkingMeter.Code" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="IOTEnabledParkingMeter.Status" class="control-label"></label>
+            <select asp-for="IOTEnabledParkingMeter.Status" class="form-control">                    
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Maintenance">Maintenance</option>
+            </select>
+            <span asp-validation-for="IOTEnabledParkingMeter.Status" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
     </div>
 </div>
 

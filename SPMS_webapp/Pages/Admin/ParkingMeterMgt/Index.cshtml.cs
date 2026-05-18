@@ -23,7 +23,10 @@ namespace SPMS_webapp.Pages.Admin.ParkingMeterMgt
 
         public async Task OnGetAsync()
         {
-            IOTEnabledParkingMeter = await _context.IOTEnabledParkingMeter.ToListAsync();
+            IOTEnabledParkingMeter = await _context.IOTEnabledParkingMeter
+                //.Where(a=> a.Status == "Active")
+                .ToListAsync();
+            // select * from IOTEnabledParkingMeter where Status = 'Active'
         }
     }
 }

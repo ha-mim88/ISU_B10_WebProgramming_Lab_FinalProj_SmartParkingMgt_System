@@ -1,0 +1,24 @@
+﻿@page
+@using System.Security.Claims
+@model SPMS_webapp.Pages.Drivers.IndexModel
+@{
+    
+}
+
+<h1>Welcome to Driver Dashboard</h1>
+
+<div>
+    @if (Model.MyDriverProfile != null)
+    {
+        <p>Driver Name: @Model.MyDriverProfile.Name</p>
+        <p>Driver License: @Model.MyDriverProfile.DriverLicenseNo</p>
+        <p>Vehicle No: @Model.MyDriverProfile.VehicleNo</p>
+        <p>Contact No: @Model.MyDriverProfile.ContactNo</p>
+
+    } else
+    {
+        <div class="alert alert-warning">
+            <p>No driver profile found. Please create your profile.</p>
+        </div>
+    }
+</div>
