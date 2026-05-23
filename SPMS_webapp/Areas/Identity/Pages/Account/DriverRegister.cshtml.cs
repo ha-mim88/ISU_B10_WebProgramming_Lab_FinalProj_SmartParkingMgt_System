@@ -135,6 +135,9 @@ namespace SPMS_webapp.Areas.Identity.Pages.Account
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
+                    // add user to "Drivers" role
+                    await _userManager.AddToRoleAsync(user, "Drivers");
+
                     // Create DriverProfile and associate it with the user
                     var driverProfile = new SPMS_webapp.Entity.DriverProfile
                     {

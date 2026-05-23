@@ -1,0 +1,50 @@
+﻿@page
+@model SPMS_webapp.Pages.Admin.UserMgt.EditModel
+@inject UserManager<IdentityUser> _userManager
+
+@{
+    ViewData["Title"] = "Add Role";
+    var rl = await _userManager.GetRolesAsync(Model.ApplicationUser);
+    var ddl = new SelectList(Model.ApplicationRoles.Where(a => !rl.Contains(a.Name)).ToList(), "Name", "Name");
+}
+
+<div class="container-fluid">
+    <h1>Add Role</h1>
+
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <h4>User: @Model.ApplicationUser.Email</h4>
+                <div>
+                    <b>Existing Roles :</b>
+                    @if (rl.Any())
+                    {
+                        @foreach (var item in rl)
+                        {
+                            <span class="badge small bg-primary">@item</span>
+                        }
+                    }
+                </div>
+                <input type="hidden" asp-for="UserId" value="@Model.ApplicationUser.Id" />
+                <div class="form-group">
+                    <label class="control-label text-left-important col-sm-1">Role</label>
+                    <div class="col-sm-4">
+                        <select class="form-control border-radius-none" asp-for="RoleId" asp-items="@ddl"></select>
+                        <span asp-validation-for="RoleId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-sm btn-primary" />
+                    <a asp-page="./Index" class="btn btn-sm btn-outline-primary">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

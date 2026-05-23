@@ -1,0 +1,88 @@
+﻿@page
+@model SPMS_webapp.Pages.Admin.UserMgt.IndexModel
+@inject UserManager<IdentityUser> _userManager
+@inject RoleManager<IdentityRole> _roleManager
+@{
+    ViewData["Title"] = "Users";
+    var rl = _roleManager.Roles.ToList();
+}
+
+
+<div class="container-fluid">
+    @* <h3>Users</h3> *@
+    <a asp-page="./AddUser" class="py-1 my-0 btn btn-sm btn-primary">Create User</a>
+    <hr />
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr class="bg-lightgray">
+                <th>
+                    User
+                </th>
+                <th>
+                    Email Confirmed ?
+                </th>
+                <th>
+                    Role
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.AppUserList != null && Model.AppUserList.Any())
+            {
+                @foreach (var item in Model.AppUserList)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td>
+                            @if (item.EmailConfirmed)
+                            {
+                                <span class="badge small text-success"><i class="fa fa-check"></i></span>
+                            }
+                            else
+                            {
+                                <span class="badge small text-danger"><i class="fa fa-times"></i></span>
+                                <form class="form-inline d-inline" asp-page-handler="ResendConfirmationEmail" asp-route-id="@item.Id" method="post">
+                                    <button type="submit" class="d-inline nav-link py-1 my-0 btn btn-sm btn-link btn-outline-primary small">Resend</button>
+                                </form>
+                                <form class="form-inline d-inline" asp-page-handler="ManualEmailConfirmation" asp-route-id="@item.Id" method="post">
+                                    <button type="submit" class="d-inline nav-link py-1 my-0 btn btn-sm btn-link btn-outline-primary small">Confirm</button>
+                                </form>
+                            }
+                        </td>
+                        <td>
+                            @{
+                                var userRole = await _userManager.GetRolesAsync(item);
+                                foreach (var role in userRole)
+                                {
+                                    <div class="px-2 hoverable border">
+                                        <strong>@role.ToString()</strong>
+                                        @if (item.UserName == User.Identity.Name && role == "admin")
+                                        {
+                                            <i>Sorry, Can't remove your own admin role</i>
+                                        }
+                                        else
+                                        {
+                                            <form class="form-inline d-inline" asp-route-cmd="remove" asp-route-role="@role.ToString()" asp-route-id="@item.Id" method="post">
+                                                <button type="submit" class="d-inline nav-link py-1 my-0 btn btn-sm btn-link btn-danger">X</button>
+                                            </form>
+                                        }
+
+                                    </div>
+                                }
+                            }
+                        </td>
+                        <td class="td-vertical-align-middle d-flex">
+                            <a asp-page="./Edit" asp-route-id="@item.Id" class="nav-link py-1 m-1 my-0 btn btn-sm btn-primary">Add Role</a>
+                            <a asp-page="./ResetPassword" asp-route-id="@item.Id" class="nav-link py-1 m-1 my-0 btn btn-sm btn-warning m-1">Reset Password</a>
+
+                        </td>
+                    </tr>
+                }
+
+            }
+        </tbody>
+    </table>
+</div>

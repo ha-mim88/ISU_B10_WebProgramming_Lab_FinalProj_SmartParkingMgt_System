@@ -5,9 +5,42 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
+    // Get the current user and their roles
+    @* var user = await UserManager.GetUserAsync(User);
+    var roles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>(); *@
+    
     <li class="nav-item">
         <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
     </li>
+        // Display links based on user roles
+    @* @if (roles.Any())
+    {
+        @foreach(var role in roles)
+        {
+            <li class="nav-item">
+                <a href="~/@role/index" class="btn btn-sm btn-outline-success">
+                    @role
+                </a>
+            </li>
+        }
+    } *@
+    @if(User.IsInRole("Admin"))
+    {
+        <li class="nav-item">
+            <a href="~/Admin/Index" class="btn btn-sm btn-outline-primary">
+                Admin Dashboard
+            </a>
+        </li>
+    }
+    @if(User.IsInRole("Drivers"))
+    {
+        <li class="nav-item">
+            <a href="~/Drivers/Index" class="btn btn-sm btn-outline-primary">
+                Drivers Dashboard
+            </a>
+        </li>
+    }
+
     <li class="nav-item">
         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
             <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>

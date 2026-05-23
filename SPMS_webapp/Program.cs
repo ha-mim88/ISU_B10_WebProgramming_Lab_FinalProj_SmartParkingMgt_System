@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SPMS_webapp.Data;
+using SPMS_webapp.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +12,25 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    // auth add step 3: add roles to identity
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    // auth add step 2: add authorization for folders
+    options.Conventions.AuthorizeFolder("/Admin", "AdminOnly");
+    options.Conventions.AuthorizeFolder("/Drivers", "DriversOnly");
+    options.Conventions.AuthorizeFolder("/Maintenance", "MaintenanceTeamOnly");
+});
+// auth add step 1: add policies for roles
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("DriversOnly", policy => policy.RequireRole("Drivers"));
+    options.AddPolicy("MaintenanceTeamOnly", policy => policy.RequireRole("MaintenanceTeam"));
+});
+
+builder.Services.AddScoped<IParkingSpotBookingService, ParkingSpotBookingService>();
 
 var app = builder.Build();
 
@@ -28,6 +46,8 @@ else
 
 app.UseRouting();
 
+app.UseAuthorization();
+// auth add step 4: add authorization middleware
 app.UseAuthorization();
 
 app.MapStaticAssets();
