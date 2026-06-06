@@ -13,6 +13,7 @@ namespace SPMS_webapp.Data
         public DbSet<DriverProfile> DriverProfile { get; set; }
         public DbSet<ParkingHistory> ParkingHistory { get; set; }
         public DbSet<ParkingReserveHistory> ParkingReserveHistory { get; set; }
+        public DbSet<PaymentHistory> PaymentHistory { get; set; }
 
     }
 }

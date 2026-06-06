@@ -95,5 +95,22 @@ namespace SPMS_webapp.Service
         {
             return context.ParkingHistory.FirstOrDefault(p => p.DriverProfile.UserId == userId && p.IsCheckedOut == false)?.ParkingSpotId;
         }
+        public ParkingHistory? GetActiveParkingHistory(string userId)
+        {
+            return context.ParkingHistory.FirstOrDefault(p => p.DriverProfile.UserId == userId && p.IsCheckedOut == false);
+        }
+        public List<ParkingHistory> GetActiveParkingHistories(string userId)
+        {
+            return context.ParkingHistory.Where(p => p.DriverProfile.UserId == userId && p.IsCheckedOut == true).ToList();
+        }
+        public List<ParkingHistory> GetAllActiveParkings()
+        {
+            return context.ParkingHistory.Where(p => p.IsCheckedOut == false).ToList();
+        }
+        public List<ParkingHistory> GetParkingHistoriesByDays(int days)
+        {
+            var cutoffDate = DateTime.Now.AddDays(-days);
+            return context.ParkingHistory.Where(p => p.IsCheckedOut == true && p.ParkingEnd >= cutoffDate).ToList();
+        }
     }
 }

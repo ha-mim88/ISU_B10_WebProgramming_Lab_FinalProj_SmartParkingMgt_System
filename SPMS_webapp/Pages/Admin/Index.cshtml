@@ -1,6 +1,90 @@
 ﻿@page
+@using SPMS_webapp.Service
 @model SPMS_webapp.Pages.Admin.IndexModel
+@inject IParkingSpotBookingService _ps
 @{
+    var parkingspots = _ps.GetAllParkingSpots();
+    var activeParkings = _ps.GetAllActiveParkings();
+    var parkingHistoriesLastThreeDays = _ps.GetParkingHistoriesByDays(3);
 }
 
-<h1>Admin Dashboard</h1>AB
+<h1>Admin Dashboard</h1>
+
+<div class="container-fluid">
+
+    <div class="mb-2">
+        <button type="button" class="btn btn-sm btn-primary" onclick="location.reload();">
+            <i class="bi bi-arrow-clockwise"></i> Refresh Now
+        </button>
+        <div class="small text-muted ms-2">Auto-refreshing every 30 seconds</div>
+    </div>
+    <script>
+            // Auto-refresh every 30 seconds
+            setInterval(function() {
+                location.reload();
+            }, 30000);
+    </script>
+    <div class="d-flex">
+        @foreach (var spot in parkingspots)
+        {
+            var activeParkingHistory = activeParkings.FirstOrDefault(p => p.ParkingSpotId == spot.Id);
+            <div class="card mb-3 @(spot.IsOccupied ? "border border-danger border-4" : "")">
+                <div class="card-body text-center">
+                    <h5 class="card-title">
+                        Parking Spot: @spot.SpotNumber - @spot.IOTEnabledParkingMeter.Code
+                        @if (spot.IsOccupied)
+                        {
+                            <span class="badge bg-danger">Occupied</span>
+                            <img width="100" class="d-block img img-thumbnail mx-auto" src="/upload/car dummy.png" />
+
+                            @if (activeParkingHistory != null)
+                            {
+                                var duration_min = ((activeParkingHistory.ParkingEnd ?? DateTime.Now) - activeParkingHistory.ParkingStart).TotalMinutes;
+                                <div class="alert alert-info">
+                                    <string>@duration_min.ToString("0.00")</string> minutes @(!activeParkingHistory.IsCheckedOut ? " and ongoing..." : "")
+                                </div>
+                                @if (!activeParkingHistory.IsCheckedOut)
+                                {
+                                    <div class="alert alert-success">
+                                        Total Parking Fee (so far): <strong>Tk. @((duration_min * 2).ToString("0.00"))</strong>
+                                    </div>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            <span class="badge bg-success">Available</span>
+                        }
+                    </h5>
+                </div>
+            </div>
+        }
+
+    </div>
+
+    <div class="list-group">
+        @foreach (var item in parkingHistoriesLastThreeDays
+            .OrderByDescending(a => a.ParkingEnd)
+            .GroupBy(a => a.ParkingEnd.Value.Date)
+        )
+        {
+            <div class="list-group-item list-group-item-primary d-flex">
+                <h6 class="mb-1 p-2">@item.Key.ToString("dd MMM, yyyy")</h6>
+                <h6 class="mb-1 p-2">Total Collection: Tk. @item.Sum(a=>a.TotalBill).ToString("0.00")</h6>                
+            </div>
+        }
+    </div>
+    <div class="list-group">
+        <div class="list-group-item list-group-item-success">
+            <h5 class="mb-1">Parking History of Last 3 Days</h5>
+        </div>
+        @foreach (var history in parkingHistoriesLastThreeDays.OrderByDescending(a => a.ParkingEnd))
+        {
+            <div class="list-group-item d-flex">
+                <p class="mb-1 fw-bold">@history.ParkingStart.ToString("yyyy-MM-dd HH:mm:ss tt") - @history.ParkingEnd.Value.ToString("yyyy-MM-dd HH:mm:ss tt")</p>
+                <p class="mb-1 ps-3">Spot: @history.ParkingSpot.SpotNumber</p>
+                <p class="mb-1 ps-3">Paid Amount: Tk. @history.TotalBill.ToString("0.00")</p>
+            </div>
+        }
+    </div>
+</div>

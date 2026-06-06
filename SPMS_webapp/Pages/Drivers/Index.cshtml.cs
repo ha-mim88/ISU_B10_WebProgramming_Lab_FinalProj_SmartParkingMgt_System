@@ -94,5 +94,55 @@ namespace SPMS_webapp.Pages.Drivers
             }
             return RedirectToPage("/Drivers/Index");
         }
+        public IActionResult OnPostCheckOut(int SpotId, int ParkingHistoryId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var parkingHistory = _context.ParkingHistory.FirstOrDefault(a => a.Id == ParkingHistoryId);
+            var spot = _context.ParkingSpot.FirstOrDefault(a => a.Id == SpotId);
+            // 1. Check if the parking history record exists and belongs to the current user
+            // 2. Check if the parking spot exists and is currently occupied
+            // 3. If both checks pass, proceed to 
+            // 3.1 calculate total bill
+            // 3.2 update parking history record with checkout time and total bill
+            // 3.3 mark the parking spot as available
+            // 3.4 add a payment history record (since it's a simulation, we can assume payment is always successful)
+            if(parkingHistory != null && spot != null && spot.IsOccupied == true && parkingHistory.IsCheckedOut == false) 
+            {
+
+                // Calculate total bill (example calculation, replace with actual logic)
+                var duration = (DateTime.Now - parkingHistory.ParkingStart).TotalMinutes;
+                var totalBill = duration * 2; // Example rate of Tk. 2 per minute
+
+                // Update parking history
+                parkingHistory.ParkingEnd = DateTime.Now;
+                parkingHistory.TotalBill = (decimal) totalBill;
+                parkingHistory.IsCheckedOut = true;
+
+                // Mark parking spot as available
+                spot.IsOccupied = false;
+
+                // Add payment history (example, replace with actual payment processing)
+                var paymentHistory = new PaymentHistory
+                {
+                    UserId = userId,
+                    SpotId = SpotId,
+                    Method = "Cash",
+                    Amount = (decimal)totalBill, IsSuccess = true,
+                    Timestamp = DateTime.Now,
+                    Remark = $""
+                };
+                _context.PaymentHistory.Add(paymentHistory);
+
+                _context.SaveChanges();
+                ViewData["SuccessMessage"] = "Checked out successfully!";
+            } else
+            {
+                // this means either the parking history record doesn't exist, the spot doesn't exist, the spot is not occupied, or the parking history record is already checked out
+                ViewData["ErrorMessage"] = "Failed to check out. Please try again.";
+            }
+
+
+            return RedirectToPage("/Drivers/Index");
+        }
     }
 }
